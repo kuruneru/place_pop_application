@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: neon-fastapi-demo
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        value: 
+      - key: PORT
+        value: "10000"

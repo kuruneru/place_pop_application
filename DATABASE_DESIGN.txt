@@ -1,0 +1,5 @@
+TABLE_NAME: pop_info;
+    COLUMN: id, name, place, evaluation, address, image, comment;
+    
+TABLE_NAME: person_info;
+    COLUMN: id, name, mail_address, password, good_evaluation, bad_evaluation, features;
