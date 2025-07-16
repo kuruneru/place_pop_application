@@ -11,5 +11,5 @@ db_url = os.getenv("DATABASE_URL")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-def first():
+def first(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "messages": messages})
