@@ -8,3 +8,7 @@ import os
 
 app = FastAPI()
 db_url = os.getenv("DATABASE_URL")
+
+@app.get("/")
+def first():
+    return {"message": "Hello World"}
