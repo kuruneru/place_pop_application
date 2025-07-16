@@ -8,7 +8,8 @@ import os
 
 app = FastAPI()
 db_url = os.getenv("DATABASE_URL")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def first():
-    return {"message": "Hello World"}
+    return templates.TemplateResponse("index.html", {"messages": messages})
