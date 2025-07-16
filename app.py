@@ -12,4 +12,4 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def first():
-    return templates.TemplateResponse("index.html", {"messages": messages})
+    return templates.TemplateResponse("index.html", {"request": request, "messages": messages})
