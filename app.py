@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Form, HTTPException, UploadFile, File
-from sqlalchemy import create_engine, textm, engine, text
+from sqlalchemy import create_engine, text
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
@@ -7,11 +7,12 @@ import os
 import uuid
 import shutil
 
-
+#定義やインスタンス化
 app = FastAPI()
 db_url = os.getenv("DATABASE_URL")
 templates = Jinja2Templates(directory="templates")
 post_page = Jinja2Templates(directory="templates")
+engine = create_engine(db_url)
 
 #メインページが開かれたとき
 @app.get("/")
