@@ -26,9 +26,7 @@ def post_form(request: Request):
 
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
-def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), ):
-    #これによりファイルを受け取る
-    image_file: UploadFile = File(...)
+def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
     #アップデートするファイルの保存場所
     UPLOAD_DIR = "templates/image_dir"
     #ファイルの拡張子の取得
@@ -39,17 +37,30 @@ def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str 
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
     #保存を試みる
-    try:
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image_file.file, buffer)
-            # shutil.copyfileobj: アップロードされたファイルの内容を効率的に保存
-            # image_file.file: アップロードされたファイルの中身（ファイルオブジェクト）
-            # buffer: 保存先のファイルオブジェクト
-    #エラー発動の場合
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"ファイル保存中にエラーが発生しました:{e}")
-    finally:
-        image_file.file.close()
+    unique_filename = None
+    if image_file and image_file.filename:
+        # ファイルの拡張子の取得
+        file_extension = os.path.splitext(image_file.filename)[1]
+        # ファイルに一意な名前をつける
+        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        # ファイルの保存先のフルパスを結合
+        file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
+        # 保存を試みる
+        try:
+            # "wb" はバイナリ書き込みモード
+            with open(file_path, "wb") as buffer:
+                # アップロードされたファイルの内容を効率的に保存
+                shutil.copyfileobj(image_file.file, buffer)
+        except Exception as e:
+            # ファイル保存中にエラーが発生した場合
+            raise HTTPException(status_code=500, detail=f"ファイル保存中にエラーが発生しました: {e}")
+        finally:
+            # アップロードされた一時ファイルを必ず閉じる（リソース解放）
+            image_file.file.close()
+    else:
+        # image_fileが必須の場合、ファイルがない場合はエラーを返す
+        raise HTTPException(status_code=400, detail="画像ファイルは必須です。")
 
     with engine.begin() as conn:
         result = conn.execute(
