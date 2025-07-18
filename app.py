@@ -44,6 +44,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
                     "profile": profile
                 }
             )
+            return RedirectResponse("/", status_code=303)
     except IntegrityError as e:
         raise HTTPException(
             status_code=409, # Conflict
