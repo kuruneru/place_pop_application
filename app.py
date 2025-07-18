@@ -59,11 +59,12 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
         raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
 
 #ログイン画面の作成
-@app.get("/login")
+@app.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
     return templates.TemplateResponse("login.html",{"request": request})
 
-def login_system(username_or_email  : str, password: str,):
+@app.post("/login", response_class=HTMLResponse)
+def login_system(username_or_email  : str, password: str):
     user = None
     with engine.connect() as conn:
         result = conn.execute(
