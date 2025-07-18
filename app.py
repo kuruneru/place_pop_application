@@ -30,7 +30,9 @@ def post_form(request: Request):
 @app.post("/user")
 def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
 
+    #パスワードのハッシュ化
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    #idは前に@を記述する
     id = f"@{username}"
 
     try:
@@ -56,6 +58,30 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
         print(f"Error during user registration: {e}")
         raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
 
+#ログイン画面の作成
+@app.get("/login")
+def login_form(request: Request):
+    return templates.TemplateResponse("login.html",{"request": request})
+
+def login_system(username_or_email  : str, password: str,)
+    user = None
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT id, username, email, password_hash FROM users WHERE username = :identifier OR email = :identifier"),
+            {"identifier": username_or_email}
+        )
+    user = result.fetchone() #1行のみの取得
+    if user:
+        if bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
+            print(f"ユーザー '{user.username}' がログインしました。")
+            return RedirectResponse("/", status_code=303)
+        else:
+            print(f"ユーザー '{username_or_email}' のパスワードが間違っています。")
+            error_message = "ユーザー名またはパスワードが正しくありません。"
+    else:
+        #ユーザが見つからない場合
+        print(f"ユーザー '{username_or_email}' が見つかりません。")
+        error_message = "ユーザー名またはパスワードが正しくありません。"
 
 #投稿用ページが開かれたとき
 @app.get("/post")
