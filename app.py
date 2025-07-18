@@ -24,14 +24,13 @@ def first(request: Request):
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
 def post_form(request: Request):
-    return templates.TemplateResponse("post.html", {"request": request})
+    return templates.TemplateResponse("user.html", {"request": request})
 
 #ユーザー登録の流れ
 @app.post("/user")
 def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
 
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
 
     try:
         with engine.begin() as conn:
