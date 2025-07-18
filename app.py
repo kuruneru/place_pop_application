@@ -84,6 +84,9 @@ def login_system(username_or_email  : str = Form(...), password: str = Form(...)
         #ユーザが見つからない場合
         print(f"ユーザー '{username_or_email}' が見つかりません。")
         error_message = "ユーザー名またはパスワードが正しくありません。"
+    
+    #ログインページの再表示
+    return templates.TemplateResponse("login.html", {"request": request, "error_message": error_message})
 
 #投稿用ページが開かれたとき
 @app.get("/post")
