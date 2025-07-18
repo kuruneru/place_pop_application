@@ -36,7 +36,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
     try:
         with engine.begin() as conn:
             result = conn.execute(
-                text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id :username, :email, :password_hash, :profile)"),
+                text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id, :username, :email, :password_hash, :profile)"),
                 {
                     "id": id,
                     "username": username,
