@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, Form, HTTPException, UploadFile, File
-from sqlalchemy import create_engine, text, IntegrityError
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
