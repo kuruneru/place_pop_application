@@ -31,12 +31,14 @@ def post_form(request: Request):
 def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
 
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    id = f"@{username}"
 
     try:
         with engine.begin() as conn:
             result = conn.execute(
-                text("INSERT INTO users (username, email, password_hash, profile) VALUES (:username, :email, :password_hash, :profile)"),
+                text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id :username, :email, :password_hash, :profile)"),
                 {
+                    "id": id,
                     "username": username,
                     "email": email,
                     "password_hash": password_hash,
