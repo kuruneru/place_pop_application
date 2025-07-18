@@ -46,10 +46,12 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
             return RedirectResponse("/", status_code=303)
     except IntegrityError as e:
         raise HTTPException(
+            print(f"Error during user registration: {e}")
             status_code=409, # Conflict
             detail="ユーザー名またはメールアドレス、または生成されたIDが既に存在します。別のものを試してみてください。"
         )
     except Exception as e:
+        print(f"Error during user registration: {e}")
         raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
 
 
