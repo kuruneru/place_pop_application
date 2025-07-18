@@ -65,7 +65,7 @@ def login_form(request: Request):
     return templates.TemplateResponse("login.html",{"request": request})
 
 @app.post("/login", response_class=HTMLResponse)
-def login_system(username_or_email  : str, password: str):
+def login_system(username_or_email  : str = Form(...), password: str = Form(...)):
     user = None
     with engine.connect() as conn:
         result = conn.execute(
