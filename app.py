@@ -1,11 +1,12 @@
 from fastapi import FastAPI, Request, Form, HTTPException, UploadFile, File
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, IntegrityError
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
 import os
 import uuid
 import shutil
+import bcrypt
 
 #定義やインスタンス化
 app = FastAPI()
@@ -18,6 +19,38 @@ engine = create_engine(db_url)
 @app.get("/")
 def first(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "messages": "messages"})
+
+#ユーザー登録ページが開かれたとき
+@app.get("/user")
+def post_form(request: Request):
+    return templates.TemplateResponse("post.html", {"request": request})
+
+#ユーザー登録の流れ
+@app.post("/user")
+def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
+
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+
+    try:
+        with engine.begin() as conn:
+            result = conn.execute(
+                text("INSERT INTO users (username, email, password_hash, profile) VALUES (:username, :email, :password_hash, :profile)"),
+                {
+                    "username": username,
+                    "email": email,
+                    "password_hash": password_hash,
+                    "profile": profile
+                }
+            )
+    except IntegrityError as e:
+        raise HTTPException(
+            status_code=409, # Conflict
+            detail="ユーザー名またはメールアドレス、または生成されたIDが既に存在します。別のものを試してみてください。"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
+
 
 #投稿用ページが開かれたとき
 @app.get("/post")
