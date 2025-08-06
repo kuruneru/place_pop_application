@@ -21,7 +21,7 @@ cloudinary.config(
 )
 
 print(f">> {cloudinary.config().cloud_name}")
-print(f">> {cloudinary.config().cloud_key}")
+print(f">> {cloudinary.config().api_key}")
 
 
 #定義やインスタンス化
