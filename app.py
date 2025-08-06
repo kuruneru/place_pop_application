@@ -20,8 +20,8 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-print(f">> {cloud_name}")
-print(f">> {api_key}")
+print(f">> {cloudinary.config().cloud_name}")
+print(f">> {cloudinary.config().cloud.key}")
 
 
 #定義やインスタンス化
