@@ -14,13 +14,18 @@ import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
 # Configuration       
-cloudinary.config( 
-    cloudinary.config( 
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"), 
-    api_key=os.getenv("CLOUDINARY_API_KEY"), 
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"), 
-    secure=True)
+cloudinary.config(
+    {
+        "cloud_name": "djlgesfne",
+        "api_key": "121659728684422",
+        "api_secret": "X7PQTReRinVSzo8M8nceql_uKYE",
+        "secure": True
+    }
 )
+
+print(f">> {"cloud_name"}")
+print(f">> {"api_key"}")
+
 
 #定義やインスタンス化
 app = FastAPI()
