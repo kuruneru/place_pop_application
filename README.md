@@ -28,3 +28,4 @@
     - Neon: SQL
     - FastAPI: Webアプリ用
     - Docker: Renderでアプリを開くための初期設定
+    - DATABASE.md: データベースについて記しているファイル 
