@@ -23,8 +23,8 @@ cloudinary.config(
     }
 )
 
-print(f">> {"cloud_name"}")
-print(f">> {"api_key"}")
+print(f">> {cloud_name}")
+print(f">> {api_key}")
 
 
 #定義やインスタンス化
