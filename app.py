@@ -5,24 +5,21 @@ from sqlalchemy.exc import IntegrityError
 from starlette.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
+from cloudinary.utils import cloudinary_url
+from cloudinary.uploader import upload
 import os
 import uuid
 import shutil
 import bcrypt
 import cloudinary
 import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
 
-# Configuration       
+# cloudinaryの初期設定
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
-
-print(f">> {cloudinary.config().cloud_name}")
-print(f">> {cloudinary.config().api_key}")
-
 
 #定義やインスタンス化
 app = FastAPI()
