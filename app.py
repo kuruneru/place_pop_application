@@ -108,7 +108,7 @@ def post_form(request: Request):
 def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
 
     # Upload an image
-    upload_result = cloudinary.uploader.upload(UploadFile,public_id="background")
+    upload_result = cloudinary.uploader.upload(image_file,public_id="background")
     print(upload_result["secure_url"])
 
     # Optimize delivery by resizing and applying auto-format and auto-quality
