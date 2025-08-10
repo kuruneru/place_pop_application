@@ -12,7 +12,6 @@ import uuid
 import shutil
 import bcrypt
 import cloudinary
-import cloudinary.uploader
 
 # cloudinaryの初期設定
 cloudinary.config(
@@ -107,55 +106,40 @@ def post_form(request: Request):
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
 def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
-    #アップデートするファイルの保存場所
-    UPLOAD_DIR = "templates/image_dir"
-    #ファイルの拡張子の取得
-    file_extension = os.path.splitext(image_file.filename)[1]
-    #ファイルに一意味の名前をつける
-    unique_filename = f"{uuid.uuid4()}{file_extension}"
-    #ファイルの名前を結合
-    file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
-    #保存を試みる
-    unique_filename = None
-    if image_file and image_file.filename:
-        # ファイルの拡張子の取得
-        file_extension = os.path.splitext(image_file.filename)[1]
-        # ファイルに一意な名前をつける
-        unique_filename = f"{uuid.uuid4()}{file_extension}"
-        # ファイルの保存先のフルパスを結合
-        file_path = os.path.join(UPLOAD_DIR, unique_filename)
+    # Upload an image
+    upload_result = cloudinary.uploader.upload(UploadFile,public_id="background")
+    print(upload_result["secure_url"])
 
-        # 保存を試みる
-        try:
-            # "wb" はバイナリ書き込みモード
-            with open(file_path, "wb") as buffer:
-                # アップロードされたファイルの内容を効率的に保存
-                shutil.copyfileobj(image_file.file, buffer)
-        except Exception as e:
-            # ファイル保存中にエラーが発生した場合
-            raise HTTPException(status_code=500, detail=f"ファイル保存中にエラーが発生しました: {e}")
-        finally:
-            # アップロードされた一時ファイルを必ず閉じる（リソース解放）
-            image_file.file.close()
-    else:
-        # image_fileが必須の場合、ファイルがない場合はエラーを返す
-        raise HTTPException(status_code=400, detail="画像ファイルは必須です。")
+    # Optimize delivery by resizing and applying auto-format and auto-quality
+    optimize_url, _ = cloudinary_url("bachground", fetch_format="auto", quality="auto")
+    print(optimize_url)
 
-    with engine.begin() as conn:
-        result = conn.execute(
-            text("INSERT INTO posts (user_id, title, place_name, address) VALUES (:user_id, :title, :place_name, address)"),
-            {
-                "user_id": user_id,
-                "title": title,
-                "place_name": place_name,
-                "address": address
-            }
+    # Transform the image: auto-crop to square aspect_ratio
+    auto_crop_url, _ = cloudinary_url("bachground", width=500, height=500, crop="auto", gravity="auto")
+    print(auto_crop_url)
+
+    try:
+        with engine.begin() as conn:
+            conn.execute("SELECT COUNT(*) FROM your_table_name;")
+            row_count = conn.fetchone()[0]
+            result = conn.execute(
+                text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
+                {
+                    "id": id,
+                    "user_id": user_id,
+                    "tilte": title,
+                    "place_name": place_name,
+                    "address": address
+                }
+            )
+            return RedirectResponse("/", status_code=303)
+    except IntegrityError as e:
+        print(f"Error during user registration: {e}")
+        raise HTTPException(
+            status_code=409, # Conflict
+            detail="ユーザー名またはメールアドレス、または生成されたIDが既に存在します。別のものを試してみてください。"
         )
-
-    return {
-        "success_message": "ファイルが正常にアップロードされました",
-        "filename": image_file.filename,         # 元のファイル名
-        "uploaded_filename": unique_filename,    # サーバーに保存されたファイル名
-        "file_path": file_path                   # サーバー上のフルパス
-    }
+    except Exception as e:
+        print(f"Error during user registration: {e}")
+        raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
