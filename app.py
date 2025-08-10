@@ -105,7 +105,9 @@ def post_form(request: Request):
 
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
-def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
+async def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
+
+    upload_file = await image_file
 
     # Upload an image
     upload_result = cloudinary.uploader.upload(image_file.read(),public_id="background")
