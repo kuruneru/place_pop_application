@@ -21,8 +21,6 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-make_id()
-
 #定義やインスタンス化
 app = FastAPI()
 db_url = os.getenv("DATABASE_URL")
@@ -38,6 +36,8 @@ def make_id():
         chr(ord(i) + rand_num)
     print(f">> {text}")
     return text
+
+make_id()
 
 #メインページが開かれたとき
 @app.get("/")
