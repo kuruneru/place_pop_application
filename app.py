@@ -32,7 +32,7 @@ def make_id(n):
    return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
 
 
-make_id(16)
+print(f">> {make_id(16)}")
 
 #メインページが開かれたとき
 @app.get("/")
