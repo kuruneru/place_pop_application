@@ -50,11 +50,12 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
 
     #パスワードのハッシュ化
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    #idは前に@を記述する
-    id = f"@{username}"
 
     try:
         with engine.begin() as conn:
+            id = make_id(16)
+            while(id_check == False):
+                id_check = conn.execute(text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"),{"id": 123}).scalar()
             result = conn.execute(
                 text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id, :username, :email, :password_hash, :profile)"),
                 {
