@@ -123,8 +123,11 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
 
     try:
         with engine.begin() as conn:
-            conn.execute(text("SELECT COUNT(*) FROM posts;"))
-            row_count = conn.fetchone()[0]
+            row = conn.execute(text("SELECT COUNT(*) FROM posts;"))
+            row_count = row.scalar()
+
+            print(row_count)
+
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
                 {
@@ -145,3 +148,4 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
     except Exception as e:
         print(f"Error during user registration: {e}")
         raise HTTPException(status_code=500, detail=f"投稿中に予期せぬエラーが発生しました: {e}")
+
