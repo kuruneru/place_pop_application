@@ -44,22 +44,42 @@ def first(request: Request):
 def post_form(request: Request):
     return templates.TemplateResponse("user.html", {"request": request})
 
-#ユーザー登録の流れ
 @app.post("/user")
 def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
 
-    #パスワードのハッシュ化
+    # パスワードのハッシュ化
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     try:
         with engine.begin() as conn:
-            #ランダム生成した文字列が使われていないかを整合する
+            # ランダム生成した文字列が使われていないかを確認
             id_check = True
-            while(id_check == True):
+            while id_check:
                 id = make_id(16)
-                id_check = conn.execute(text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"), {"id": id}).scalar()
-                print(id_check)
-            result = conn.execute(
+                id_check = conn.execute(
+                    text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"),
+                    {"id": id}
+                ).scalar()
+
+            # メールアドレスとIDが両方存在するかチェック
+            duplicate_check = conn.execute(
+                text("""
+                    SELECT EXISTS (
+                        SELECT 1 FROM users
+                        WHERE id = :id AND email = :email
+                    )
+                """),
+                {"id": id, "email": email}
+            ).scalar()
+
+            if duplicate_check:
+                raise HTTPException(
+                    status_code=409,
+                    detail="そのIDとメールアドレスの組み合わせはすでに登録されています。"
+                )
+
+            # ユーザー登録
+            conn.execute(
                 text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id, :username, :email, :password_hash, :profile)"),
                 {
                     "id": id,
@@ -69,16 +89,13 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
                     "profile": profile
                 }
             )
+
             return RedirectResponse("/", status_code=303)
-    except IntegrityError as e:
-        print(f"Error during user registration: {e}")
-        raise HTTPException(
-            status_code=409, # Conflict
-            detail="ユーザー名またはメールアドレス、または生成されたIDが既に存在します。別のものを試してみてください。"
-        )
+
     except Exception as e:
         print(f"Error during user registration: {e}")
         raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
+
 
 #ログイン画面の作成
 @app.get("/login", response_class=HTMLResponse)
