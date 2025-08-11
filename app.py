@@ -123,7 +123,7 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
 
     try:
         with engine.begin() as conn:
-            conn.execute("SELECT COUNT(*) FROM posts;")
+            conn.execute(text("SELECT COUNT(*) FROM posts;"))
             row_count = conn.fetchone()[0]
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
