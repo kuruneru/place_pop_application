@@ -58,6 +58,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
             while(id_check == False):
                 id = make_id(16)
                 id_check = conn.execute(text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"), {"id": id}).scalar()
+                print(id_check)
             result = conn.execute(
                 text("INSERT INTO users (id, username, email, password_hash, profile) VALUES (:id, :username, :email, :password_hash, :profile)"),
                 {
