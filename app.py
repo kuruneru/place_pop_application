@@ -133,7 +133,7 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
                 {
                     "id": id,
                     "user_id": user_id,
-                    "tilte": title,
+                    "title": title,
                     "place_name": place_name,
                     "address": address
                 }
