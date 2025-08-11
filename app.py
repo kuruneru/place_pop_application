@@ -54,6 +54,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
     try:
         with engine.begin() as conn:
             #ランダム生成した文字列が使われていないかを整合する
+            id_check = False
             while(id_check == False):
                 id = make_id(16)
                 id_check = conn.execute(text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"), {"id": id}).scalar()
