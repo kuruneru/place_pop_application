@@ -31,7 +31,7 @@ engine = create_engine(db_url)
 def make_id():
     text = "AAAAAAAAAAAAAAAA"
     for i in text:
-        limit = 122 - chr(ord(i))
+        limit = 122 - ord(i)
         rand_num = random(0, limit)
         chr(ord(i) + rand_num)
     print(f">> {text}")
