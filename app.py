@@ -12,7 +12,7 @@ import os
 import uuid
 import shutil
 import bcrypt
-import random
+import random, string
 
 # cloudinaryの初期設定
 cloudinary.config(
@@ -28,16 +28,11 @@ templates = Jinja2Templates(directory="templates")
 post_page = Jinja2Templates(directory="templates")
 engine = create_engine(db_url)
 
-def make_id():
-    text = "AAAAAAAAAAAAAAAA"
-    for i in text:
-        limit = 122 - ord(i)
-        rand_num = random.randint(0, limit)
-        chr(ord(i) + rand_num)
-        print(f">> {i}")
-    return text
+def make_id(n):
+   return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
 
-make_id()
+
+make_id(16)
 
 #メインページが開かれたとき
 @app.get("/")
