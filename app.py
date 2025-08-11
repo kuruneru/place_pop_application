@@ -7,11 +7,11 @@ from starlette.responses import RedirectResponse
 from dotenv import load_dotenv
 from cloudinary.utils import cloudinary_url
 from cloudinary.uploader import upload
+import cloudinary
 import os
 import uuid
 import shutil
 import bcrypt
-import cloudinary
 
 # cloudinaryの初期設定
 cloudinary.config(
