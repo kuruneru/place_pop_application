@@ -144,4 +144,4 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
         )
     except Exception as e:
         print(f"Error during user registration: {e}")
-        raise HTTPException(status_code=500, detail=f"ユーザー登録中に予期せぬエラーが発生しました: {e}")
+        raise HTTPException(status_code=500, detail=f"投稿中に予期せぬエラーが発生しました: {e}")
