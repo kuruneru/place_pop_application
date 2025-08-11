@@ -12,6 +12,7 @@ import os
 import uuid
 import shutil
 import bcrypt
+import random
 
 # cloudinaryの初期設定
 cloudinary.config(
@@ -20,12 +21,23 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
+make_id()
+
 #定義やインスタンス化
 app = FastAPI()
 db_url = os.getenv("DATABASE_URL")
 templates = Jinja2Templates(directory="templates")
 post_page = Jinja2Templates(directory="templates")
 engine = create_engine(db_url)
+
+def make_id():
+    text = "AAAAAAAAAAAAAAAA"
+    for i in text:
+        limit = 122 - chr(ord(i))
+        rand_num = random(0, limit)
+        chr(ord(i) + rand_num)
+    print(f">> {text}")
+    return text
 
 #メインページが開かれたとき
 @app.get("/")
