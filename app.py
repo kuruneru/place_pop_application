@@ -61,6 +61,8 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
                     {"id": id}
                 ).scalar()
 
+            id = "@" + id
+
             # メールアドレスとIDが両方存在するかチェック
             duplicate_check = conn.execute(
                 text("""
