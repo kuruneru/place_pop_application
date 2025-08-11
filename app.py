@@ -28,11 +28,9 @@ templates = Jinja2Templates(directory="templates")
 post_page = Jinja2Templates(directory="templates")
 engine = create_engine(db_url)
 
+#ランダムなIDの生成関数
 def make_id(n):
    return ''.join(random.choices(string.ascii_letters + string.digits, k=n))
-
-
-print(f">> {make_id(16)}")
 
 #メインページが開かれたとき
 @app.get("/")
@@ -44,6 +42,7 @@ def first(request: Request):
 def post_form(request: Request):
     return templates.TemplateResponse("user.html", {"request": request})
 
+#ユーザ登録の処理
 @app.post("/user")
 def user_registration(username: str = Form(...), email: str = Form(...), password: str = Form(...), profile: str = Form(None)):
 
@@ -77,7 +76,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
             if duplicate_check:
                 raise HTTPException(
                     status_code=409,
-                    detail="そのIDとメールアドレスの組み合わせはすでに登録されています。"
+                    detail="そのメールアドレスはすでに登録されています。"
                 )
 
             # ユーザー登録
@@ -104,6 +103,7 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
 def login_form(request: Request):
     return templates.TemplateResponse("login.html",{"request": request})
 
+#ログインの処理
 @app.post("/login", response_class=HTMLResponse)
 def login_system(username_or_email  : str = Form(...), password: str = Form(...)):
     user = None
@@ -136,38 +136,46 @@ def post_form(request: Request):
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
 async def post_data(user_id: str = Form(...), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
-
-    upload_file = await image_file.read()
-
-    # Upload an image
-    upload_result = cloudinary.uploader.upload(upload_file,public_id="background")
-    print(upload_result["secure_url"])
-
-    # Optimize delivery by resizing and applying auto-format and auto-quality
-    optimize_url, _ = cloudinary_url("bachground", fetch_format="auto", quality="auto")
-    print(optimize_url)
-
-    # Transform the image: auto-crop to square aspect_ratio
-    auto_crop_url, _ = cloudinary_url("bachground", width=500, height=500, crop="auto", gravity="auto")
-    print(auto_crop_url)
-
     try:
         with engine.begin() as conn:
-            row = conn.execute(text("SELECT COUNT(*) FROM posts;"))
-            row_count = row.scalar()
 
-            print(row_count)
+            id_check = True
+            while id_check:
+                id = make_id(16)
+                id_check = conn.execute(
+                    text("SELECT EXISTS (SELECT 1 FROM posts WHERE id = :id)"),
+                    {"id": id}
+                ).scalar()
+
+                id = "@" + id
+
+            upload_file = await image_file.read()
+
+            # Upload an image
+            upload_result = cloudinary.uploader.upload(upload_file,public_id=id)
+            print(upload_result["secure_url"])
+
+            # Optimize delivery by resizing and applying auto-format and auto-quality
+            optimize_url, _ = cloudinary_url("bachground", fetch_format="auto", quality="auto")
+            print(optimize_url)
+
+            # Transform the image: auto-crop to square aspect_ratio
+            auto_crop_url, _ = cloudinary_url("bachground", width=500, height=500, crop="auto", gravity="auto")
+            print(auto_crop_url)
+
+            file_URL = "https://res.cloudinary.com/djlgesfne/image/upload/" + image_file.filename
 
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
                 {
-                    "id": row_count,
+                    "id": id,
                     "user_id": user_id,
                     "title": title,
                     "place_name": place_name,
                     "address": address
                 }
             )
+
             return RedirectResponse("/", status_code=303)
     except IntegrityError as e:
         print(f"Error during user registration: {e}")
