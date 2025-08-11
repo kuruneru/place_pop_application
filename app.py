@@ -68,10 +68,10 @@ def user_registration(username: str = Form(...), email: str = Form(...), passwor
                 text("""
                     SELECT EXISTS (
                         SELECT 1 FROM users
-                        WHERE id = :id AND email = :email
+                        WHERE email = :email
                     )
                 """),
-                {"id": id, "email": email}
+                {"email": email}
             ).scalar()
 
             if duplicate_check:
