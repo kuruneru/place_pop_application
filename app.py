@@ -32,7 +32,7 @@ def make_id():
     text = "AAAAAAAAAAAAAAAA"
     for i in text:
         limit = 122 - ord(i)
-        rand_num = random(0, limit)
+        rand_num = random.uniform(0, limit)
         chr(ord(i) + rand_num)
     print(f">> {text}")
     return text
