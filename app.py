@@ -34,7 +34,7 @@ def make_id():
         limit = 122 - ord(i)
         rand_num = random.randint(0, limit)
         chr(ord(i) + rand_num)
-    print(f">> {text}")
+        print(f">> {i}")
     return text
 
 make_id()
