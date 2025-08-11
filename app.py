@@ -166,13 +166,14 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
             file_URL = "https://res.cloudinary.com/djlgesfne/image/upload/" + image_file.filename
 
             result = conn.execute(
-                text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
+                text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename)"),
                 {
                     "id": id,
                     "user_id": user_id,
                     "title": title,
                     "place_name": place_name,
                     "address": address
+                    "image_filename": file_URL
                 }
             )
 
