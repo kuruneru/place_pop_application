@@ -131,7 +131,7 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address) VALUES (:id, :user_id, :title, :place_name, :address)"),
                 {
-                    "id": id,
+                    "id": row_count,
                     "user_id": user_id,
                     "title": title,
                     "place_name": place_name,
