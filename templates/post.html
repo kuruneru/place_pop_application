@@ -10,6 +10,14 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* コメント欄フォーカス時の強調 */
+        textarea {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        textarea:focus {
+            border-color: #2563eb; /* Tailwindのblue-600 */
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -24,45 +32,43 @@
         {% endif %}
 
         <!-- 投稿フォーム -->
-        <!-- 投稿フォーム -->
-<form action="/post" method="post" enctype="multipart/form-data" class="space-y-4">
-    <div>
-        <label for="title" class="block text-gray-700 text-sm font-bold mb-2">タイトル:</label>
-        <input type="text" id="title" name="title" required
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="例: 美味しいカフェ発見">
-    </div>
-    <div>
-        <label for="place_name" class="block text-gray-700 text-sm font-bold mb-2">場所の名前:</label>
-        <input type="text" id="place_name" name="place_name" required
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="例: スターバックス渋谷店">
-    </div>
-    <div>
-        <label for="address" class="block text-gray-700 text-sm font-bold mb-2">住所:</label>
-        <input type="text" id="address" name="address"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="例: 東京都渋谷区～">
-    </div>
-    <div>
-        <label for="image_file" class="block text-gray-700 text-sm font-bold mb-2">画像をアップロード:</label>
-        <input type="file" id="image_file" name="image_file" accept="image/*" required
-            class="block w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
-    </div>
-
-    <!-- コメント入力欄 -->
-    <div>
-        <label for="annotation" class="block text-gray-700 text-sm font-bold mb-2">コメント:</label>
-        <textarea id="annotation" name="annotation" rows="4"
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="投稿にコメントを追加できます"></textarea>
-    </div>
-
-    <button type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 ease-in-out shadow-lg">
-        投稿する
-    </button>
-</form>
+        <form action="/post" method="post" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">タイトル:</label>
+                <input type="text" id="title" name="title" required
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="例: 美味しいカフェ発見">
+            </div>
+            <div>
+                <label for="place_name" class="block text-gray-700 text-sm font-bold mb-2">場所の名前:</label>
+                <input type="text" id="place_name" name="place_name" required
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="例: スターバックス渋谷店">
+            </div>
+            <div>
+                <label for="address" class="block text-gray-700 text-sm font-bold mb-2">住所:</label>
+                <input type="text" id="address" name="address"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="例: 東京都渋谷区～">
+            </div>
+            <div>
+                <label for="image_file" class="block text-gray-700 text-sm font-bold mb-2">画像をアップロード:</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*" required
+                    class="block w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer focus:outline-none">
+            </div>
+            <!-- コメント欄追加 -->
+            <div>
+                <label for="annotation" class="block text-gray-700 text-sm font-bold mb-2">コメント:</label>
+                <textarea id="annotation" name="annotation" rows="4"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight 
+                           focus:outline-none focus:shadow-outline resize-none"
+                    placeholder="投稿についての説明や感想を書いてください..."></textarea>
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-300 ease-in-out shadow-lg">
+                投稿する
+            </button>
+        </form>
 
         <div class="mt-6 text-center">
             <a href="/" class="text-blue-500 hover:text-blue-700 text-sm">トップページに戻る</a>
