@@ -28,6 +28,7 @@ db_url = os.getenv("DATABASE_URL")
 templates = Jinja2Templates(directory="templates")
 post_page = Jinja2Templates(directory="templates")
 engine = create_engine(db_url)
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
 
 #ランダムなIDの生成関数
 def make_id(n):
@@ -106,7 +107,7 @@ def login_form(request: Request):
 
 #ログインの処理
 @app.post("/login", response_class=HTMLResponse)
-def login_system(username_or_email  : str = Form(...), password: str = Form(...)):
+def login_system(request: Request, username_or_email  : str = Form(...), password: str = Form(...)):
     user = None
     with engine.connect() as conn:
         result = conn.execute(
@@ -117,6 +118,7 @@ def login_system(username_or_email  : str = Form(...), password: str = Form(...)
     if user:
         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
             print(f"ユーザー '{user.username}' がログインしました。")
+            request.session["user_id"] = user.id
             return RedirectResponse("/", status_code=303)
         else:
             print(f"ユーザー '{username_or_email}' のパスワードが間違っています。")
