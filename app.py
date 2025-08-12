@@ -163,7 +163,11 @@ async def post_data(user_id: str = Form(...), title: str = Form(...), place_name
             auto_crop_url, _ = cloudinary_url("bachground", width=500, height=500, crop="auto", gravity="auto")
             print(auto_crop_url)
 
+            #投稿した画像のURLを取得
             file_URL = "https://res.cloudinary.com/djlgesfne/image/upload/" + image_file.filename
+
+            #ユーザーIDを取得
+            user_id = Request.session.get("user_id")
 
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename)"),
