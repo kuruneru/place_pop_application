@@ -9,9 +9,8 @@ from cloudinary.utils import cloudinary_url
 from cloudinary.uploader import upload
 from starlette.middleware.sessions import SessionMiddleware
 import cloudinary
+import itsdangerous
 import os
-import uuid
-import shutil
 import bcrypt
 import random, string
 
