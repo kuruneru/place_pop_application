@@ -135,7 +135,7 @@ def post_form(request: Request):
 
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
-async def post_data(user_id: str = Form(None), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
+async def post_data(request: Request, user_id: str = Form(None), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...)):#これによりデータを受け取る
     try:
         with engine.begin() as conn:
 
@@ -191,4 +191,3 @@ async def post_data(user_id: str = Form(None), title: str = Form(...), place_nam
     except Exception as e:
         print(f"Error during user registration: {e}")
         raise HTTPException(status_code=500, detail=f"投稿中に予期せぬエラーが発生しました: {e}")
-
