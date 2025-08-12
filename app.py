@@ -167,7 +167,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
             file_URL = "https://res.cloudinary.com/djlgesfne/image/upload/" + image_file.filename
 
             #ユーザーIDを取得
-            user_id = Request.session.get("user_id")
+            user_id = request.session.get("user_id")
 
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename)"),
