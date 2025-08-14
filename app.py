@@ -160,24 +160,21 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 
             # Upload an image
             upload_result = cloudinary.uploader.upload(upload_file,public_id=id)
-            print(upload_result["secure_url"])
 
             # Optimize delivery by resizing and applying auto-format and auto-quality
             optimize_url, _ = cloudinary_url("bachground", fetch_format="auto", quality="auto")
-            print(optimize_url)
 
             # Transform the image: auto-crop to square aspect_ratio
             auto_crop_url, _ = cloudinary_url("bachground", width=500, height=500, crop="auto", gravity="auto")
-            print(auto_crop_url)
 
             #投稿した画像のURLを取得
-            file_URL = "https://res.cloudinary.com/djlgesfne/image/upload/" + image_file.filename
+            file_URL = upload_result["secure_url"]
 
             #ユーザーIDを取得
             user_id = request.session.get("user_id")
 
             result = conn.execute(
-                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename)"),
+                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, anntation) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename :annotation)"),
                 {
                     "id": id,
                     "user_id": user_id,
