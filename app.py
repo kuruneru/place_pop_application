@@ -39,7 +39,8 @@ async def first(request: Request):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM posts"))
         row = result.fetchall()
-        templates.TemplateResponse("index.html", {"request": request, "post_info": row})
+        
+    return templates.TemplateResponse("index.html", {"request": request, "post_info": row})
 
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
