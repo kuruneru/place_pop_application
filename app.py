@@ -175,7 +175,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
             user_id = request.session.get("user_id")
 
             result = conn.execute(
-                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, anntation) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename :annotation)"),
+                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, anntation) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename, :annotation)"),
                 {
                     "id": id,
                     "user_id": user_id,
