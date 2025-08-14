@@ -169,6 +169,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 
             #投稿した画像のURLを取得
             file_URL = upload_result["secure_url"]
+            print(f">> {file_URL}")
 
             #ユーザーIDを取得
             user_id = request.session.get("user_id")
