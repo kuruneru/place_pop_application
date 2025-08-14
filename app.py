@@ -35,8 +35,11 @@ def make_id(n):
 
 #メインページが開かれたとき
 @app.get("/")
-def first(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "messages": "messages"})
+async def first(request: Request):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM posts"))
+        row = result.fetchall()
+        templates.TemplateResponse("index.html", {"request": request, "post_info": row})
 
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
