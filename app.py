@@ -39,8 +39,8 @@ async def first(request: Request):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM posts"))
         rows = result.fetchall()
-        posts = [dict._mapping(row) for row in rows]
-        
+        posts = [dict(row._mapping) for row in rows]
+
     return templates.TemplateResponse("index.html", {"request": request, "post_info": posts})
 
 #ユーザー登録ページが開かれたとき
