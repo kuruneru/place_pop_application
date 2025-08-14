@@ -38,9 +38,10 @@ def make_id(n):
 async def first(request: Request):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM posts"))
-        row = result.fetchall()
+        rows = result.fetchall()
+        posts = [dict._mapping(row) for row in rows]
         
-    return templates.TemplateResponse("index.html", {"request": request, "post_info": row})
+    return templates.TemplateResponse("index.html", {"request": request, "post_info": posts})
 
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
