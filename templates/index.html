@@ -88,17 +88,17 @@
     <div class="post-list">
     {% if post_info %}
         {% for post in post_info %}
-            <a href="/post_detial.html" class="post-card block p-4 border rounded-lg hover:bg-gray-100 transition">
-                <h2>{{ post.title }}</h2>
-                <p>場所: {{ post.place_name }}</p>
-                <p>住所: {{ post.address }}</p>
-                {% if post.image_filename %}
-                    <img src="{{ post.image_filename }}" alt="投稿画像" class="mt-2">
-                {% endif %}
-                {% if post.annotation %}
-                    <p class="comment mt-2">コメント: {{ post.annotation }}</p>
-                {% endif %}
-            </a>
+            <a href="/posts/{{ post.id }}" class="post-card block p-4 border rounded-lg hover:bg-gray-100 transition">
+            <h2>{{ post.title }}</h2>
+            <p>場所: {{ post.place_name }}</p>
+            <p>住所: {{ post.address }}</p>
+            {% if post.image_filename %}
+                <img src="{{ post.image_filename }}" alt="投稿画像" class="mt-2">
+            {% endif %}
+            {% if post.annotation %}
+                <p class="comment mt-2">コメント: {{ post.annotation }}</p>
+            {% endif %}
+        </a>
         {% endfor %}
     {% else %}
         <p>まだ投稿がありません。</p>

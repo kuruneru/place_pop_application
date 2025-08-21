@@ -202,7 +202,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 
 
 # 投稿詳細ページ
-@app.get("/post_detial.html", response_class=HTMLResponse)
+@app.get("/posts/{post_id}", response_class=HTMLResponse)
 async def post_detail(request: Request, post_id: str):
     with engine.connect() as conn:
         result = conn.execute(
