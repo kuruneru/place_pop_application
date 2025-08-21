@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }} - 詳細</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 text-gray-900 p-6">
+    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 class="text-2xl font-bold mb-2">{{ post.title }}</h1>
+        <p class="mb-1"><strong>場所:</strong> {{ post.place_name }}</p>
+        <p class="mb-1"><strong>住所:</strong> {{ post.address }}</p>
+
+        {% if post.image_filename %}
+            <img src="{{ post.image_filename }}" alt="投稿画像" class="my-4 rounded-lg shadow">
+        {% endif %}
+
+        {% if post.annotation %}
+            <p class="mb-3"><strong>コメント:</strong> {{ post.annotation }}</p>
+        {% endif %}
+
+        <p><strong>投稿者属性:</strong> {{ post.poster_type }}</p>
+        <p><strong>投稿カテゴリ:</strong> {{ post.location_type }}</p>
+
+        <a href="/" class="text-blue-600 underline mt-6 inline-block">← 投稿一覧に戻る</a>
+    </div>
+</body>
+</html>
