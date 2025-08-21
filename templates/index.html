@@ -88,7 +88,7 @@
     <div class="post-list">
     {% if post_info %}
         {% for post in post_info %}
-            <a href="{/post.id}" class="post-card block p-4 border rounded-lg hover:bg-gray-100 transition">
+            <a href="/post/{{ post.id }}" class="post-card block p-4 border rounded-lg hover:bg-gray-100 transition">
                 <h2>{{ post.title }}</h2>
                 <p>場所: {{ post.place_name }}</p>
                 <p>住所: {{ post.address }}</p>
