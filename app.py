@@ -40,8 +40,9 @@ async def first(request: Request):
         result = conn.execute(text("SELECT * FROM posts"))
         rows = result.fetchall()
         posts = [dict(row._mapping) for row in rows]
+        user_name = conn.execute(text("SELECT name FROM users"))
 
-    return templates.TemplateResponse("index.html", {"request": request, "post_info": posts})
+    return templates.TemplateResponse("index.html", {"request": request, "post_info": posts, "user_name": user_name})
 
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
