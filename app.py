@@ -201,9 +201,18 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
         raise HTTPException(status_code=500, detail=f"投稿中に予期せぬエラーが発生しました: {e}")
 
 
+# 投稿詳細ページ
 @app.get("/posts/{post_id}", response_class=HTMLResponse)
-async def post_detail(request: Request, post_id: str, db: Session = Depends(get_db)):
-    post = db.query(Post).filter(Post.id == post_id).first()
+async def post_detail(request: Request, post_id: str):
+    print(f">> {post_id}")
+    with engine.connect() as conn:
+        result = conn.execute(
+            text("SELECT * FROM posts WHERE id = :id"),
+            {"id": post_id}
+        )
+        post = result.fetchone()
+
     if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    return templates.TemplateResponse("post_detail.html", {"request": request, "post": post})
+        raise HTTPException(status_code=404, detail="投稿が見つかりません")
+
+    return templates.TemplateResponse("post_detail.html", {"request": request, "post": dict(post._mapping)})
