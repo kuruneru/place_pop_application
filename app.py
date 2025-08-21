@@ -142,7 +142,7 @@ def post_form(request: Request):
 
 #投稿用ページから投稿についての処理が行われたとき
 @app.post("/post")
-async def post_data(request: Request, user_id: str = Form(None), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...), annotation: str = Form()):#これによりデータを受け取る
+async def post_data(request: Request, user_id: str = Form(None), title: str = Form(...), place_name: str = Form(...), address: str = Form(), image_file: UploadFile = File(...), annotation: str = Form(), poster_type: str = Form(), location_type: str = Form()):#これによりデータを受け取る
     try:
         with engine.begin() as conn:
 
@@ -175,7 +175,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
             user_id = request.session.get("user_id")
 
             result = conn.execute(
-                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, annotation) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename, :annotation)"),
+                text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, annotation, poster_type, location_type) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename, :annotation, :poster_type, :location_type)"),
                 {
                     "id": id,
                     "user_id": user_id,
@@ -183,7 +183,9 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
                     "place_name": place_name,
                     "address": address,
                     "image_filename": file_URL,
-                    "annotation": annotation
+                    "annotation": annotation,
+                    "poster_type": poster_type,
+                    "location_type": location_type
                 }
             )
 
