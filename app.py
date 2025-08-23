@@ -41,7 +41,7 @@ async def first(request: Request):
         rows = result.fetchall()
         posts = [dict(row._mapping) for row in rows]
 
-    return templates.TemplateResponse("index.html", {"request": request, "post_info": posts, "user_name": user_name})
+    return templates.TemplateResponse("index.html", {"request": request, "post_info": posts})
 
 #ユーザー登録ページが開かれたとき
 @app.get("/user")
