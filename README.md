@@ -22,6 +22,7 @@
                 | example  | example  | example  | example  | example  |
         - アプリの使い方
             - このアプリは以下の機能を備えている
+               
 
 - 技術
     - Render: Webページの公開
