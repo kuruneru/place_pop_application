@@ -216,3 +216,6 @@ async def post_detail(request: Request, post_id: str):
         raise HTTPException(status_code=404, detail="投稿が見つかりません")
 
     return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
+
+
+    
