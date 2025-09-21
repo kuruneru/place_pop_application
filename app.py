@@ -172,8 +172,8 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
             print(f">> {file_URL}")
 
             #ユーザーIDを取得
-            user_id = request.session.get("user_id")
 
+            user_id = request.session.get("user_id")
             result = conn.execute(
                 text("INSERT INTO posts (id, user_id, title, place_name, address, image_filename, annotation, poster_type, location_type) VALUES (:id, :user_id, :title, :place_name, :address, :image_filename, :annotation, :poster_type, :location_type)"),
                 {
@@ -217,5 +217,25 @@ async def post_detail(request: Request, post_id: str):
 
     return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
 
+#コメントが投稿されたとき
+@app.post("post/{post_id}")
+async def commnet(request: Request, post_id: str, comment: str):
 
-    
+    user_id = request.session.get("user_id")
+    with engine.connect() as conn:
+        #  ランダム生成した文字列が使われていないかを確認
+            id_check = True
+            while id_check:
+                id = make_id(16)
+                id_check = conn.execute(
+                    text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"),
+                    {"id": id}
+                ).scalar()
+
+            id = "@" + id
+
+        conn.execute(
+            text("INSERT INTO comments (post_id, user_id, content) VALUES (:post_id, :user_id, :content)"), 
+            {"post_id": post_id, "user_id": user_id, "content": commnet}
+        )
+        conn.commit()
