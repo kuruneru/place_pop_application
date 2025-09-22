@@ -201,7 +201,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
         raise HTTPException(status_code=500, detail=f"投稿中に予期せぬエラーが発生しました: {e}")
 
 
-# 投稿詳細ページ
+# 投稿詳細ページへの移動
 @app.get("/posts/{post_id}", response_class=HTMLResponse)
 async def post_detail(request: Request, post_id: str):
     print(f">> {post_id}")
@@ -241,4 +241,4 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
     
         result.fetchone()
     
-    return templates.TemplateResponse("post/{post_id}", {"request": request})
+    return templates.TemplateResponse("post_detial.html", {"request": request})
