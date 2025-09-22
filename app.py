@@ -241,5 +241,7 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
             {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
         )
     
+        conn.commit()
     print(">> ここまではOK")
-    return templates.TemplateResponse("post_detial.html", {"request": request})
+
+    return templates.TemplateResponse("/posts/{post_id}", {"request": request})
