@@ -219,23 +219,26 @@ async def post_detail(request: Request, post_id: str):
 
 #コメントが投稿されたとき
 @app.post("post/{post_id}")
-async def commnet(request: Request, post_id: str, comment: str):
+async def commnet(request: Request, post_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
     with engine.connect() as conn:
         #  ランダム生成した文字列が使われていないかを確認
-            id_check = True
-            while id_check:
-                id = make_id(16)
-                id_check = conn.execute(
-                    text("SELECT EXISTS (SELECT 1 FROM users WHERE id = :id)"),
-                    {"id": id}
-                ).scalar()
+        id_check = True
+        while id_check:
+            id = make_id(16)
+            id_check = conn.execute(
+                text("SELECT EXISTS (SELECT 1 FROM comments WHERE id = :id)"),
+                {"id": id}
+            ).scalar()
 
-            id = "@" + id
+        id = "@" + id
 
-        conn.execute(
+        result = conn.execute(
             text("INSERT INTO comments (post_id, user_id, content) VALUES (:post_id, :user_id, :content)"), 
             {"post_id": post_id, "user_id": user_id, "content": commnet}
         )
-        conn.commit()
+    
+        result.fetchone()
+    
+    return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
