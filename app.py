@@ -214,16 +214,16 @@ async def post_detail(request: Request, post_id: str):
 
     if not post:
         raise HTTPException(status_code=404, detail="投稿が見つかりません")
-    
-    print(">> これが大丈夫なのは知ってる")
 
     return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
-async def commnet(request: Request, post_id: str, user_id: str, comment: str = Form(...)):
+async def commnet(request: Request, post_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
+
+    print(f">> これがユーザーID{user_id}")
     with engine.connect() as conn:
         #  ランダム生成した文字列が使われていないかを確認
         id_check = True
