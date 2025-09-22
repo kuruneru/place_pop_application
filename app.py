@@ -154,7 +154,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
                     {"id": id}
                 ).scalar()
 
-                id = "@" + id
+                id = "%" + id
 
             upload_file = await image_file.read()
 
@@ -232,7 +232,7 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
                 {"id": id}
             ).scalar()
 
-        id = "@" + id
+        id = "&" + id
 
         result = conn.execute(
             text("INSERT INTO comments (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
@@ -241,4 +241,5 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
     
         result.fetchone()
     
+    print(">> ここまではOK")
     return templates.TemplateResponse("post_detial.html", {"request": request})
