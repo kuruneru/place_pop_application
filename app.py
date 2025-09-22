@@ -241,4 +241,4 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
     
         result.fetchone()
     
-    return templates.TemplateResponse("post_detial.html", {"request": request})
+    return templates.TemplateResponse("post/{post_id}", {"request": request})
