@@ -235,8 +235,8 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
         id = "@" + id
 
         result = conn.execute(
-            text("INSERT INTO comments (post_id, user_id, content) VALUES (:post_id, :user_id, :content)"), 
-            {"post_id": post_id, "user_id": user_id, "content": commnet}
+            text("INSERT INTO comments (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
+            {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
         )
     
         result.fetchone()
