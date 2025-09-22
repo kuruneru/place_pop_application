@@ -154,7 +154,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
                     {"id": id}
                 ).scalar()
 
-                id = "$" + id
+                id = "@" + id
 
             upload_file = await image_file.read()
 
@@ -220,7 +220,7 @@ async def post_detail(request: Request, post_id: str):
     return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
 
 #コメントが投稿されたとき
-@app.post("posts/{post_id}")
+@app.post("/posts/{post_id}")
 async def commnet(request: Request, post_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
@@ -234,7 +234,7 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
                 {"id": id}
             ).scalar()
 
-        id = "&" + id
+        id = "@" + id
 
         result = conn.execute(
             text("INSERT INTO comments (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
