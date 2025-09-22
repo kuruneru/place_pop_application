@@ -221,7 +221,7 @@ async def post_detail(request: Request, post_id: str):
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
-async def commnet(request: Request, post_id: str, comment: str = Form(...)):
+async def commnet(request: Request, post_id: str, user_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
     with engine.connect() as conn:
