@@ -154,7 +154,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
                     {"id": id}
                 ).scalar()
 
-                id = "%" + id
+                id = "$" + id
 
             upload_file = await image_file.read()
 
