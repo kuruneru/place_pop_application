@@ -241,4 +241,4 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
     
         result.fetchone()
     
-    return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
+    return RedirectResponse(url=f"/post/{post_id}", status_code=303)
