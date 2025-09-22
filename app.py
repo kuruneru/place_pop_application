@@ -218,7 +218,7 @@ async def post_detail(request: Request, post_id: str):
     return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
 
 #コメントが投稿されたとき
-@app.post("post/{post_id}")
+@app.post("posts/{post_id}")
 async def commnet(request: Request, post_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
