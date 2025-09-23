@@ -203,7 +203,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 
 # 投稿詳細ページへの移動
 @app.get("/posts/{post_id}", response_class=HTMLResponse)
-async def post_detail(request: Request, post_id: str, comment_id: str):
+async def post_detail(request: Request, post_id: str):
     print(f">> {post_id}")
     with engine.connect() as conn:
         result = conn.execute(
