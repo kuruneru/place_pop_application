@@ -213,7 +213,10 @@ async def post_detail(request: Request, post_id: str):
         post = result.fetchone()
 
         with engine.connect() as conn:
-            result = conn.execute(text(" SELECT comments.content, users.username AS user_name FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = :post_id ORDER BY comments.created_at DESC"), {"post_id": post_id})
+            result = conn.execute(
+                text(" SELECT comments.content, users.username AS user_name FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = :post_id ORDER BY comments.created_at DESC"), 
+                {"post_id": post_id}
+            )
             rows = result.fetchall()
         comments = [dict(row._mapping) for row in rows]
 
