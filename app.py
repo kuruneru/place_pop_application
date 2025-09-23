@@ -212,14 +212,16 @@ async def post_detail(request: Request, post_id: str, comment_id: str):
         )
         post = result.fetchone()
 
-        result = conn.execute(
-            text("SELECT * FROM commnets WHERE id = :id"),
-            {"id": comment_id}
-        )
+        with engine.connect() as conn:
+            result = conn.execute(text(" SELECT commnets.content users.username AS user_name FROM commnets JOIN users ON comments.user_id = users.id ORDER BY comments.created_at DESC"))
+            rows = result.fetchall()
+        comments = [dict(row._mapping) for row in rows]
+
     if not post:
         raise HTTPException(status_code=404, detail="投稿が見つかりません")
 
-    return templates.TemplateResponse("post_detial.html", {"request": request, "post": dict(post._mapping)})
+    return templates.TemplateResponse("post_detail.html",{"request": request, "post": dict(post._mapping), "comments": [dict(r._mapping) for r in comments]})
+
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
@@ -247,12 +249,6 @@ async def comment(request: Request, post_id: str, comment: str = Form(...)):
         )
 
         conn.commit()
-
-
-        with engine.connect() as conn:
-            result = conn.execute(text(" SELECT commnets.content users.username AS user_name FROM commnets JOIN users ON comments.user_id = users.id ORDER BY comments.created_at DESC"))
-            rows = result.fetchall()
-        comments = [dict(row._mapping) for row in rows]
 
     print(">> ここまではOK")
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)

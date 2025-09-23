@@ -1,40 +1,79 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ post.title }} - 詳細</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ post.title }} | 投稿詳細</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-50 text-gray-900 p-6">
-    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
-        <h1 class="text-2xl font-bold mb-2">{{ post.title }}</h1>
-        <p class="mb-1"><strong>場所:</strong> {{ post.place_name }}</p>
-        <p class="mb-1"><strong>住所:</strong> {{ post.address }}</p>
+<body class="bg-gray-100 text-gray-800">
+  <!-- 投稿本体 -->
+  <main class="max-w-3xl mx-auto mt-10 px-4">
+    <article class="bg-white shadow-lg rounded-2xl p-6">
+      <h1 class="text-3xl font-bold mb-4">{{ post.title }}</h1>
+      <div class="text-sm text-gray-500 mb-4">
+        <span class="mr-4"><strong>場所:</strong> {{ post.place_name }}</span>
+        <span><strong>住所:</strong> {{ post.address }}</span>
+      </div>
 
-        {% if post.image_filename %}
-            <img src="{{ post.image_filename }}" alt="投稿画像" class="my-4 rounded-lg shadow">
-        {% endif %}
+      {% if post.image_filename %}
+        <img src="{{ post.image_filename }}" alt="投稿画像" class="w-full rounded-xl shadow mb-6">
+      {% endif %}
 
-        {% if post.annotation %}
-            <p class="mb-3"><strong>コメント:</strong> {{ post.annotation }}</p>
-        {% endif %}
+      {% if post.annotation %}
+        <p class="text-lg leading-relaxed mb-6">{{ post.annotation }}</p>
+      {% endif %}
 
-        <p><strong>投稿者属性:</strong> {{ post.poster_type }}</p>
-        <p><strong>投稿カテゴリ:</strong> {{ post.location_type }}</p>
+      <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+        <div><strong>投稿者属性:</strong> {{ post.poster_type }}</div>
+        <div><strong>カテゴリ:</strong> {{ post.location_type }}</div>
+      </div>
 
-        <a href="/" class="text-blue-600 underline mt-6 inline-block">← 投稿一覧に戻る</a>
-    </div>
-      <!-- ✅ コメント入力フォーム -->
-        <div class="mt-6 border-t pt-4">
-            <h2 class="text-lg font-semibold mb-2">コメントを追加</h2>
-            <form method="POST" action="/posts/{{ post.id }}" class="space-y-3">
-                <textarea name="comment" rows="2" placeholder="コメントを入力…" 
-                          class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-                <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    送信
-                </button>
-            </form>
-        </div>
+      <div class="mt-6">
+        <a href="/" class="text-blue-600 hover:text-blue-800 font-semibold">← 投稿一覧に戻る</a>
+      </div>
+    </article>
+
+    <!-- コメント一覧 -->
+    <section class="bg-white shadow-lg rounded-2xl mt-8 p-6">
+      <h2 class="text-2xl font-semibold mb-4">コメント一覧</h2>
+      {% if comments and comments|length > 0 %}
+        <ul class="divide-y divide-gray-200">
+          {% for c in comments %}
+            <li class="py-3">
+              <p class="font-semibold text-gray-900">{{ c.user_name }}</p>
+              <p class="text-gray-700">{{ c.content }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-gray-500">まだコメントはありません。</p>
+      {% endif %}
+    </section>
+
+    <!-- コメント投稿フォーム -->
+    <section class="bg-white shadow-lg rounded-2xl mt-8 p-6">
+      <h2 class="text-2xl font-semibold mb-4">コメントを追加</h2>
+      <form method="POST" action="/posts/{{ post.id }}" class="space-y-4">
+        <textarea 
+          name="comment" 
+          rows="3" 
+          placeholder="コメントを入力…" 
+          class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+        ></textarea>
+        <button 
+          type="submit" 
+          class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+        >
+          送信
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="text-center text-gray-500 text-sm mt-10 mb-4">
+    &copy; 2025 あなたのアプリ名
+  </footer>
 </body>
 </html>
