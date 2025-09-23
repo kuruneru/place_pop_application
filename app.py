@@ -203,7 +203,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 
 # 投稿詳細ページへの移動
 @app.get("/posts/{post_id}", response_class=HTMLResponse)
-async def post_detail(request: Request, post_id: str):
+async def post_detail(request: Request, post_id: str, comment_id: str):
     print(f">> {post_id}")
     with engine.connect() as conn:
         result = conn.execute(
@@ -212,6 +212,10 @@ async def post_detail(request: Request, post_id: str):
         )
         post = result.fetchone()
 
+        result = conn.execute(
+            text("SELECT * FROM commnets WHERE id = :id"),
+            {"id": comment_id}
+        )
     if not post:
         raise HTTPException(status_code=404, detail="投稿が見つかりません")
 
@@ -219,7 +223,7 @@ async def post_detail(request: Request, post_id: str):
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
-async def commnet(request: Request, post_id: str, comment: str = Form(...)):
+async def comment(request: Request, post_id: str, comment: str = Form(...)):
 
     user_id = request.session.get("user_id")
 
@@ -236,12 +240,19 @@ async def commnet(request: Request, post_id: str, comment: str = Form(...)):
 
         id = "@" + id
 
+        #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
             text("INSERT INTO comments (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
             {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
         )
-    
-        conn.commit()
-    print(">> ここまではOK")
 
+        conn.commit()
+
+
+        with engine.connect() as conn:
+            result = conn.execute(text(" SELECT commnets.content users.username AS user_name FROM commnets JOIN users ON comments.user_id = users.id ORDER BY comments.created_at DESC"))
+            rows = result.fetchall()
+        comments = [dict(row._mapping) for row in rows]
+
+    print(">> ここまではOK")
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
