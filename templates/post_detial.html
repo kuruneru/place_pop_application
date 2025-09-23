@@ -41,8 +41,8 @@
         <ul class="divide-y divide-gray-200">
           {% for c in comments %}
             <li class="py-3">
-              <p class="font-semibold text-gray-900">{{ comments.user_name }}</p>
-              <p class="text-gray-700">{{ comments.content }}</p>
+              <p class="font-semibold text-gray-900">{{ c.user_name }}</p>
+              <p class="text-gray-700">{{ c.content }}</p>
             </li>
           {% endfor %}
         </ul>
