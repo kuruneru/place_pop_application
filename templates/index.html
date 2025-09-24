@@ -89,17 +89,25 @@
     {% if post_info %}
         {% for post in post_info %}
             <a href="/posts/{{ post.id }}" class="post-card block p-4 border rounded-lg hover:bg-gray-100 transition">
-            <h2>{{ post.user_name }}</h2>
-            <h2>{{ post.title }}</h2>
-            <p>場所: {{ post.place_name }}</p>
-            <p>住所: {{ post.address }}</p>
-            {% if post.image_filename %}
+                <h2>{{ post.user_name }}</h2>
+                <h2>{{ post.title }}</h2>
+                <p>場所: {{ post.place_name }}</p>
+                <p>住所: {{ post.address }}</p>
+                {% if post.image_filename %}
                 <img src="{{ post.image_filename }}" alt="投稿画像" class="mt-2">
-            {% endif %}
-            {% if post.annotation %}
-                <p class="comment mt-2">コメント: {{ post.annotation }}</p>
-            {% endif %}
-        </a>
+                {% endif %}
+                {% if post.annotation %}
+                <p class="comment mt-2">{{ post.annotation }}</p>
+                {% endif %}
+            </a>
+
+            <!-- ★ 高評価ボタンを追加 -->
+            <form action="/like/{{ post.id }}" method="POST" style="margin-top:8px;">
+                <button type="submit" 
+                style="padding:6px 12px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">
+                👍 高評価
+                </button>
+            </form>
         {% endfor %}
     {% else %}
         <p>まだ投稿がありません。</p>

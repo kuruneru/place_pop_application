@@ -154,7 +154,7 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
                     {"id": id}
                 ).scalar()
 
-                id = "@" + id
+                id = "%" + id
 
             upload_file = await image_file.read()
 
@@ -243,7 +243,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...)):
                 {"id": id}
             ).scalar()
 
-        id = "@" + id
+        id = "$" + id
 
         #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
