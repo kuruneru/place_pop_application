@@ -228,7 +228,7 @@ async def post_detail(request: Request, post_id: str):
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
-async def comment(request: Request, post_id: str, comment: str = Form(...), commenter_type: str = ):
+async def comment(request: Request, post_id: str, comment: str = Form(...), commenter_type: str = Form(...)):
 
     user_id = request.session.get("user_id")
 
