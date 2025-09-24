@@ -61,25 +61,44 @@
     </section>
 
     <!-- コメント投稿フォーム -->
-    <section class="bg-white shadow-lg rounded-2xl mt-8 p-6">
-      <h2 class="text-2xl font-semibold mb-4">コメントを追加</h2>
-      <form method="POST" action="/posts/{{ post.id }}" class="space-y-4">
-        <textarea 
-          name="comment" 
-          rows="3" 
-          placeholder="コメントを入力…" 
-          class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          required
-        ></textarea>
-        <button 
-          type="submit" 
-          class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          送信
-        </button>
-      </form>
-    </section>
-  </main>
+    <!-- コメント投稿フォーム -->
+        <section class="bg-white shadow-lg rounded-2xl mt-8 p-6">
+            <h2 class="text-2xl font-semibold mb-4">コメントを投稿</h2>
+            <form method="POST" action="/posts/{{ post.id }}" class="space-y-4">
+                <!-- コメント本文 -->
+                <textarea 
+                name="comment" 
+                rows="3" 
+                placeholder="コメントを入力..." 
+                class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+                ></textarea>
+
+                <!-- コメントタイプ選択 -->
+                <div>
+                <label for="comment_type" class="block text-sm font-medium text-gray-700 mb-1">コメントする人のタイプ</label>
+                <select 
+                    name="comment_type" 
+                    id="comment_type"
+                    class="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
+                >
+                    <option value="">選択してください</option>
+                    <option value="観光者">観光者</option>
+                    <option value="地元の人">地元の人」</option>
+                </select>
+                </div>
+
+                <!-- 送信ボタン -->
+                <button 
+                type="submit" 
+                class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+                >
+                送信
+                </button>
+            </form>
+        </section>
+    </main>
 
   <footer class="text-center text-gray-500 text-sm mt-10 mb-4">
     &copy; 2025 あなたのアプリ名

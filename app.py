@@ -228,7 +228,7 @@ async def post_detail(request: Request, post_id: str):
 
 #コメントが投稿されたとき
 @app.post("/posts/{post_id}")
-async def comment(request: Request, post_id: str, comment: str = Form(...)):
+async def comment(request: Request, post_id: str, comment: str = Form(...), commenter_type: str = ):
 
     user_id = request.session.get("user_id")
 
@@ -255,3 +255,29 @@ async def comment(request: Request, post_id: str, comment: str = Form(...)):
 
     print(">> ここまではOK")
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
+
+#postの高評価
+@app.get("/like/{post_id}")
+async def like_post(request: Request, post_id: str):
+    
+    user_id = request.session.get("user_id")
+
+    with engine.connect() as conn:
+        #  ランダム生成した文字列が使われていないかを確認
+        id_check = True
+        while id_check:
+            id = make_id(16)
+            id_check = conn.execute(
+                text("SELECT EXISTS (SELECT 1 FROM psot_evaluations WHERE id = :id)"),
+                {"id": id}
+            ).scalar()
+
+        id = "@" + id
+
+        #ここではcommentsテーブルにデータを格納している
+        result = conn.execute(
+            text("INSERT INTO post_ecaluations (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
+            {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
+        )
+
+    conn.commit()
