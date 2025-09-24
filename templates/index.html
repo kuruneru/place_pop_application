@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>投稿一覧</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My App</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f2f5;
+      background-color: #f8f9fa;
       margin: 0;
       padding: 20px;
       display: flex;
@@ -35,12 +35,11 @@
       font-size: 16px;
       transition: background-color 0.2s;
     }
-
     .links a:hover {
       background-color: #0056b3;
     }
 
-    /* 投稿カードをグリッドで並べる */
+    /* --- 投稿カードのレイアウト --- */
     .post-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -50,45 +49,56 @@
     }
 
     .post-card {
-      display: block;
       background: white;
       border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1), 0 0 0 6px #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.15), 0 0 0 6px #e9ecef;
+    }
+
+    .post-content {
+      display: block;
       padding: 16px;
       text-decoration: none;
       color: inherit;
-      position: relative;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1),
-                  0 0 0 6px #f8f9fa; /* 後ろにカードがあるような効果 */
-      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .post-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 20px rgba(0,0,0,0.15),
-                  0 0 0 6px #e9ecef;
-      background-color: #fff;
-    }
-
-    .post-card h2 {
-      margin: 0 0 8px 0;
+    .post-content h2 {
+      margin: 0 0 6px 0;
       font-size: 18px;
       color: #222;
     }
 
-    .post-card p {
+    .post-content p {
       margin: 6px 0;
       color: #555;
+      font-size: 14px;
     }
 
-    .post-card img {
+    .post-content img {
       max-width: 100%;
       border-radius: 5px;
       margin-top: 10px;
     }
 
-    .like-form {
+    .comment {
       margin-top: 8px;
-      text-align: center;
+      font-style: italic;
+      color: #555;
+    }
+
+    .like-form {
+      border-top: 1px solid #eee;
+      padding: 10px 16px;
+      text-align: right;
+      background: #fafafa;
     }
 
     .like-form button {
@@ -100,7 +110,6 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-
     .like-form button:hover {
       background: #218838;
     }
@@ -117,21 +126,25 @@
   <div class="post-list">
     {% if post_info %}
       {% for post in post_info %}
-        <a href="/posts/{{ post.id }}" class="post-card">
-          <h2>{{ post.user_name }}</h2>
-          <h2>{{ post.title }}</h2>
-          <p>場所: {{ post.place_name }}</p>
-          <p>住所: {{ post.address }}</p>
-          {% if post.image_filename %}
-          <img src="{{ post.image_filename }}" alt="投稿画像">
-          {% endif %}
-          {% if post.annotation %}
-          <p class="comment">{{ post.annotation }}</p>
-          {% endif %}
-        </a>
-        <form action="/like/{{ post.id }}" method="POST" class="like-form">
-          <button type="submit">👍 高評価</button>
-        </form>
+        <div class="post-card">
+          <!-- クリックで詳細ページへ遷移 -->
+          <a href="/posts/{{ post.id }}" class="post-content">
+            <h2>{{ post.user_name }}</h2>
+            <h2>{{ post.title }}</h2>
+            <p>場所: {{ post.place_name }}</p>
+            <p>住所: {{ post.address }}</p>
+            {% if post.image_filename %}
+              <img src="{{ post.image_filename }}" alt="投稿画像">
+            {% endif %}
+            {% if post.annotation %}
+              <p class="comment">{{ post.annotation }}</p>
+            {% endif %}
+          </a>
+          <!-- 高評価ボタン -->
+          <form action="/like/{{ post.id }}" method="POST" class="like-form">
+            <button type="submit">👍 高評価</button>
+          </form>
+        </div>
       {% endfor %}
     {% else %}
       <p>まだ投稿がありません。</p>
