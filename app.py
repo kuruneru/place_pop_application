@@ -214,7 +214,7 @@ async def post_detail(request: Request, post_id: str):
 
         with engine.connect() as conn:
             result = conn.execute(
-                text("SELECT comments.content, users.username AS user_name FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = :post_id ORDER BY comments.created_at DESC"),
+                text("SELECT comments.content, commenter_type, users.username AS user_name FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = :post_id ORDER BY comments.created_at DESC"),
                 {"post_id": post_id}
             )
             rows = result.fetchall()
@@ -247,8 +247,8 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
         #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
-            text("INSERT INTO comments (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
-            {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
+            text("INSERT INTO comments (id, post_id, user_id, commenter_type, content) VALUES (:id, :post_id, :user_id, :commenter_type, :content)"), 
+            {"id": id, "post_id": post_id, "user_id": user_id, "commenter_type": commenter_type, "content": comment}
         )
 
         conn.commit()
