@@ -245,7 +245,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
         id = "@" + id
 
-        print(type(commenter_type))
+        print(f">> {type(commenter_type)}")
         #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
             text("INSERT INTO comments (id, post_id, user_id, commenter_type, content) VALUES (:id, :post_id, :user_id, :commenter_type, :content)"), 
