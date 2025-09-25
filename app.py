@@ -247,7 +247,6 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
         id = "@" + id
 
-        print(f">> {type(commenter_type)}")
         #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
             text("INSERT INTO comments (id, post_id, user_id, commenter_type, content) VALUES (:id, :post_id, :user_id, :commenter_type, :content)"), 
@@ -256,7 +255,6 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
         conn.commit()
 
-    print(">> ここまではOK")
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
 
 #postの高評価
