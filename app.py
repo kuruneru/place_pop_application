@@ -204,7 +204,6 @@ async def post_data(request: Request, user_id: str = Form(None), title: str = Fo
 # 投稿詳細ページへの移動
 @app.get("/posts/{post_id}", response_class=HTMLResponse)
 async def post_detail(request: Request, post_id: str):
-    print(f">> {post_id}")
     with engine.connect() as conn:
         result = conn.execute(
             text("SELECT * FROM posts WHERE id = :id"),
@@ -233,8 +232,6 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
     print(f">> {commenter_type}")
 
     user_id = request.session.get("user_id")
-
-    print(f">> これがユーザーID{user_id}")
     with engine.connect() as conn:
         #  ランダム生成した文字列が使われていないかを確認
         id_check = True
