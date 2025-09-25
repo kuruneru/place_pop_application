@@ -230,6 +230,8 @@ async def post_detail(request: Request, post_id: str):
 @app.post("/posts/{post_id}")
 async def comment(request: Request, post_id: str, comment: str = Form(...), commenter_type: str = Form(...)):
 
+    print(f">> {commenter_type}")
+
     user_id = request.session.get("user_id")
 
     print(f">> これがユーザーID{user_id}")
