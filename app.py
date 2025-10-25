@@ -274,7 +274,7 @@ async def like_post(request: Request, post_id: str):
 
         #ここではcommentsテーブルにデータを格納している
         result = conn.execute(
-            text("INSERT INTO post_ecaluations (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
+            text("INSERT INTO post_evaluations (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
             {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
         )
 
