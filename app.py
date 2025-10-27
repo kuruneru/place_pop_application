@@ -259,7 +259,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 async def like_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
-    print(post_id)
+    print(f">>> {post_id}")
 
     with engine.connect() as conn:
         #  ランダム生成した文字列が使われていないかを確認
