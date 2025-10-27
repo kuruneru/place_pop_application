@@ -279,6 +279,7 @@ async def like_local_post(request: Request, post_id: str):
         )
 
         conn.commit()
+    return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
 
 #postの高評価
 @app.post("/like_tourist/{post_id}")
@@ -304,4 +305,5 @@ async def like_tourist_post(request: Request, post_id: str):
             {"id": id, "post_id": post_id, "user_id": user_id, "evaluation_type": "tourist"}
         )
 
-        conn.commit()   
+        conn.commit()
+    return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
