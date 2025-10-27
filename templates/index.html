@@ -137,10 +137,26 @@
               <p class="comment">{{ post.annotation }}</p>
             {% endif %}
           </a>
-          <!-- 高評価ボタン -->
-          <form action="/like/{{ post.id }}" method="POST" class="like-form">
-            <button type="submit">👍 高評価</button>
-          </form>
+          <!-- ★ 2種類の高評価ボタンを横並びに配置 -->
+          <div class="flex justify-between space-x-4 mt-4">
+              <!-- 地元民の高評価 -->
+              <form action="/like_local/{{ post.id }}" method="POST" class="flex-1">
+                  <button type="submit"
+                      class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md 
+                            hover:bg-blue-700 transition duration-200 ease-in-out shadow">
+                      👍 地元民の高評価
+                  </button>
+              </form>
+
+              <!-- 観光者の高評価 -->
+              <form action="/like_tourist/{{ post.id }}" method="POST" class="flex-1">
+                  <button type="submit"
+                      class="w-full px-4 py-2 bg-green-600 text-white font-semibold rounded-md 
+                            hover:bg-green-700 transition duration-200 ease-in-out shadow">
+                      🌏 観光者の高評価
+                  </button>
+              </form>
+          </div>
         </div>
       {% endfor %}
     {% else %}
