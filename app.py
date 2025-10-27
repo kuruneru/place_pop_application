@@ -256,7 +256,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
 #postの高評価
 @app.post("/like_local/{post_id}")
-async def like_post(request: Request, post_id: str):
+async def like_local_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
 
@@ -266,7 +266,7 @@ async def like_post(request: Request, post_id: str):
         while id_check:
             id = make_id(16)
             id_check = conn.execute(
-                text("SELECT EXISTS (SELECT 1 FROM psot_evaluations WHERE id = :id)"),
+                text("SELECT EXISTS (SELECT 1 FROM post_evaluations WHERE id = :id)"),
                 {"id": id}
             ).scalar()
 
@@ -278,11 +278,11 @@ async def like_post(request: Request, post_id: str):
             {"id": id, "post_id": post_id, "user_id": user_id, "evaluation_type": "local"}
         )
 
-    conn.commit()
+        conn.commit()
 
 #postの高評価
 @app.post("/like_tourist/{post_id}")
-async def like_post(request: Request, post_id: str):
+async def like_tourist_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
 
@@ -292,7 +292,7 @@ async def like_post(request: Request, post_id: str):
         while id_check:
             id = make_id(16)
             id_check = conn.execute(
-                text("SELECT EXISTS (SELECT 1 FROM psot_evaluations WHERE id = :id)"),
+                text("SELECT EXISTS (SELECT 1 FROM post_evaluations WHERE id = :id)"),
                 {"id": id}
             ).scalar()
 
@@ -304,4 +304,4 @@ async def like_post(request: Request, post_id: str):
             {"id": id, "post_id": post_id, "user_id": user_id, "evaluation_type": "tourist"}
         )
 
-    conn.commit()   
+        conn.commit()   
