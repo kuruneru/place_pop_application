@@ -256,7 +256,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
 
 #postの高評価
 @app.get("/like/{post_id}")
-async def like_post(request: Request):
+async def like_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
     print(post_id)
