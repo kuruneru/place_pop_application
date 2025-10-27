@@ -255,7 +255,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
 
 #postの高評価
-@app.get("/like/{post_id}")
+@app.post("/like/{post_id}")
 async def like_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
