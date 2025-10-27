@@ -255,7 +255,7 @@ async def comment(request: Request, post_id: str, comment: str = Form(...), comm
     return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
 
 #postの高評価
-@app.post("/like/{post_id}")
+@app.post("/like_local/{post_id}")
 async def like_post(request: Request, post_id: str):
     
     user_id = request.session.get("user_id")
@@ -273,10 +273,37 @@ async def like_post(request: Request, post_id: str):
 
         id = "@" + id
 
-        #ここではcommentsテーブルにデータを格納している
+        #ここではpost_evaluationsテーブルにデータを格納している
         result = conn.execute(
-            text("INSERT INTO post_evaluations (id, post_id, user_id, content) VALUES (:id, :post_id, :user_id, :content)"), 
-            {"id": id, "post_id": post_id, "user_id": user_id, "content": comment}
+            text("INSERT INTO post_evaluations (id, post_id, user_id, evaluation_type) VALUES (:id, :post_id, :user_id, :evaluation_type)"), 
+            {"id": id, "post_id": post_id, "user_id": user_id, "evaluation_type": "local"}
         )
 
     conn.commit()
+
+#postの高評価
+@app.post("/like_tourist/{post_id}")
+async def like_post(request: Request, post_id: str):
+    
+    user_id = request.session.get("user_id")
+    print(f">>> {post_id}")
+
+    with engine.connect() as conn:
+        #  ランダム生成した文字列が使われていないかを確認
+        id_check = True
+        while id_check:
+            id = make_id(16)
+            id_check = conn.execute(
+                text("SELECT EXISTS (SELECT 1 FROM psot_evaluations WHERE id = :id)"),
+                {"id": id}
+            ).scalar()
+
+        id = "@" + id
+
+        #ここではpost_evaluationsテーブルにデータを格納している
+        result = conn.execute(
+            text("INSERT INTO post_evaluations (id, post_id, user_id, evaluation_type) VALUES (:id, :post_id, :user_id, :evaluation_type)"), 
+            {"id": id, "post_id": post_id, "user_id": user_id, "evaluation_type": "tourist"}
+        )
+
+    conn.commit()   
