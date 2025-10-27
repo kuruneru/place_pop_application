@@ -110,6 +110,53 @@
     .like-form button:hover {
       background: #218838;
     }
+
+    .like-buttons {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0 12px 0;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+      gap: 10px;
+    }
+
+    .like-item {
+      margin: 0;
+    }
+
+    .like-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* 地元民ボタン */
+    .like-btn.local {
+      background-color: #007bff;
+    }
+    .like-btn.local:hover {
+      background-color: #0069d9;
+    }
+
+    /* 観光者ボタン */
+    .like-btn.tourist {
+      background-color: #28a745;
+    }
+    .like-btn.tourist:hover {
+      background-color: #218838;
+    }
+
   </style>
 </head>
 <body>
@@ -137,25 +184,19 @@
               <p class="comment">{{ post.annotation }}</p>
             {% endif %}
           </a>
-          <!-- ★ 2種類の高評価ボタンを横並びに配置 -->
-          <div class="flex justify-between space-x-4 mt-4">
-              <!-- 地元民の高評価 -->
-              <form action="/like_local/{{ post.id }}" method="POST" class="flex-1">
-                  <button type="submit"
-                      class="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md 
-                            hover:bg-blue-700 transition duration-200 ease-in-out shadow">
-                      👍 地元民の高評価
-                  </button>
-              </form>
+          <!-- ★ 高評価ボタンエリア -->
+          <div class="like-buttons">
+            <form action="/like_local/{{ post.id }}" method="POST" class="like-item">
+              <button type="submit" class="like-btn local">
+                👍 地元民 {{ post.local_likes or 0 }}
+              </button>
+            </form>
 
-              <!-- 観光者の高評価 -->
-              <form action="/like_tourist/{{ post.id }}" method="POST" class="flex-1">
-                  <button type="submit"
-                      class="w-full px-4 py-2 bg-green-600 text-white font-semibold rounded-md 
-                            hover:bg-green-700 transition duration-200 ease-in-out shadow">
-                      🌏 観光者の高評価
-                  </button>
-              </form>
+            <form action="/like_tourist/{{ post.id }}" method="POST" class="like-item">
+              <button type="submit" class="like-btn tourist">
+                🌏 観光者 {{ post.tourist_likes or 0 }}
+              </button>
+            </form>
           </div>
         </div>
       {% endfor %}
