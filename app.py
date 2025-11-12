@@ -51,12 +51,16 @@ async def first(request: Request):
             )
             local_count = local_result.scalar() or 0
 
+            print(f">> {local_count}")
+
             # global 評価数
             global_result = conn.execute(
                 text("SELECT COUNT(*) FROM post_evaluations WHERE post_id = :post_id AND evaluation_type = 'global'"),
                 {"post_id": post_id}
             )
             global_count = global_result.scalar() or 0
+
+            print(f">> {global_count}")
 
             # 結果を追加
             post["local_likes"] = local_count
