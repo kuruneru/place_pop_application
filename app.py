@@ -37,7 +37,7 @@ def make_id(n):
 @app.get("/")
 async def first(request: Request):
     with engine.connect() as conn:
-        result = conn.execute(text(" SELECT posts.id, posts.title, posts.place_name, posts.address, posts.image_filename, posts.poster_type, posts.location_type, posts.created_at, posts.updated_at, posts.annotation, users.username AS user_name FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC"))
+        result = conn.execute(text(" SELECT posts.id, posts.title, posts.place_name, posts.address, posts.image_filename, posts.poster_type, posts.location_type, posts.created_at, posts.updated_at, posts.annotation, users.username AS user_name, post_evaluation.id FROM posts JOIN users, post_evaluation ON posts.user_id = users.id ORDER BY posts.created_at DESC"))
         rows = result.fetchall()
         posts = [dict(row._mapping) for row in rows]
 
@@ -306,4 +306,5 @@ async def like_tourist_post(request: Request, post_id: str):
         )
 
         conn.commit()
-    return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
+    return RedirectResponse(url=f"/", status_code_=303)
+    # return RedirectResponse(url=f"/posts/{post_id}", status_code=303)
