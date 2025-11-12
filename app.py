@@ -40,13 +40,12 @@ async def first(request: Request):
         result = conn.execute(text("SELECT posts.id, posts.title, posts.place_name, posts.address, posts.image_filename, posts.poster_type, posts.location_type, posts.created_at, posts.updated_at, posts.annotation, users.username AS user_name FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC"))
         rows = result.fetchall()
         for row in rows:
-            print(f">> {row(0)}")
+            print(f">> {type(row)}")
             i = 0
-            user_id = row[i](0)
+            post_id = row[i](0)
             local_result = conn.execute(text("SEELCT COUNT(*) FROM evaluations WHERE evaluation_type = 'local'"))
             print(f">> {local_result}")
             local_row = local_result.fechall()
-            rows[i].appned()
 
         posts = [dict(row._mapping) for row in rows]
 
