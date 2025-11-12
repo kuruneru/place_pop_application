@@ -64,10 +64,8 @@ async def first(request: Request):
 
             # 結果を追加
             post["local_likes"] = local_count
-            post["global_likes"] = global_count
+            post["tourist_likes"] = global_count
             posts.append(post)
-
-        posts = [dict(row._mapping) for row in rows]
 
     return templates.TemplateResponse("index.html", {"request": request, "post_info": posts})
 
