@@ -38,7 +38,7 @@ def make_id(n):
 async def first(request: Request):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT posts.id, posts.title, posts.place_name, posts.address, posts.image_filename, posts.poster_type, posts.location_type, posts.created_at, posts.updated_at, posts.annotation, users.username AS user_name FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC"))
-        print(f">> {result}")
+        print(f">> {result[0]}")
         rows = result.fetchall()
         posts = [dict(row._mapping) for row in rows]
 
