@@ -41,7 +41,7 @@ async def first(request: Request):
         rows = result.fetchall()
         for row in rows:
             i = 0
-            user_id = row(0)
+            user_id = row[i](0)
             local_result = conn.execute(text("SEELCT COUNT(*) FROM evaluations WHERE evaluation_type = 'local'"))
             print(f">> {local_result}")
             local_row = local_result.fechall()
