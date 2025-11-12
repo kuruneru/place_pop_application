@@ -39,14 +39,28 @@ async def first(request: Request):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT posts.id, posts.title, posts.place_name, posts.address, posts.image_filename, posts.poster_type, posts.location_type, posts.created_at, posts.updated_at, posts.annotation, users.username AS user_name FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC"))
         rows = result.fetchall()
-        print(f">> {rows[0]}")
-        for row in rows:
-            print(f">> {type(row)}")
-            i = 0
-            post_id = row(0)
-            local_result = conn.execute(text("SEELCT COUNT(*) FROM evaluations WHERE evaluation_type = 'local'"))
-            print(f">> {local_result}")
-            local_row = local_result.fechall()
+        posts = []
+        for row in rows:    
+            post = dict(row._mapping)
+            post_id = post["id"]
+
+            # local 評価数
+            local_result = conn.execute(
+                text("SELECT COUNT(*) FROM evaluations WHERE post_id = :post_id AND evaluation_type = 'local'"),
+                {"post_id": post_id}
+            )
+            local_count = local_result.scalar() or 0
+
+            # global 評価数
+            global_result = conn.execute(
+                text("SELECT COUNT(*) FROM evaluations WHERE post_id = :post_id AND evaluation_type = 'global'"),
+                {"post_id": post_id}
+            )
+            global_count = global_result.scalar() or 0
+
+            # 結果を追加
+            post["local_likes"] = local_count
+            post["global_likes"] =
 
         posts = [dict(row._mapping) for row in rows]
 
